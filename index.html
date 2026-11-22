@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>包装技術 確認テスト対策クイズ</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Noto Sans JP -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      background-color: #f1f5f9;
+      color: #0f172a;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-tap {
+      transition: transform 0.1s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    }
+    .btn-tap:active {
+      transform: scale(0.98);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.22s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between bg-slate-100 text-slate-900">
+
+  <!-- ヘッダー -->
+  <header class="bg-slate-900 text-white shadow-md sticky top-0 z-20">
+    <div class="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-black text-white text-sm tracking-tighter shadow-inner">
+          PKG
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-bold leading-tight">包装技術 確認テスト対策</h1>
+          <p class="text-[11px] text-slate-400">配布テキスト準拠・○×＆4択演習（全48問）</p>
+        </div>
+      </div>
+      <button id="homeBtn" onclick="confirmGoHome()" class="hidden text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 btn-tap">
+        トップへ
+      </button>
+    </div>
+  </header>
+
+  <!-- メインコンテンツ -->
+  <main class="flex-grow max-w-2xl w-full mx-auto px-4 py-5">
+
+    <!-- ==================== 1. ホーム（設定）画面 ==================== -->
+    <section id="homeScreen" class="space-y-4 animate-fade-in">
+      
+      <!-- 学習ステータスカード -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">学習データ・達成状況</h2>
+          <button onclick="openResetModal()" class="text-xs text-slate-400 hover:text-red-500 underline">
+            履歴リセット
+          </button>
+        </div>
+        <div class="grid grid-cols-3 gap-2.5 text-center">
+          <div class="bg-slate-50 rounded-xl p-2.5 border border-slate-100">
+            <div class="text-[11px] text-slate-500 font-medium">収録問題数</div>
+            <div class="text-lg sm:text-xl font-extrabold text-slate-800 mt-0.5"><span id="totalCountDisplay">48</span><span class="text-xs font-normal ml-0.5">問</span></div>
+          </div>
+          <div class="bg-blue-50 rounded-xl p-2.5 border border-blue-100">
+            <div class="text-[11px] text-blue-600 font-medium">最高正答率</div>
+            <div class="text-lg sm:text-xl font-extrabold text-blue-700 mt-0.5"><span id="bestScoreDisplay">--</span><span class="text-xs font-normal ml-0.5">%</span></div>
+          </div>
+          <div class="bg-amber-50 rounded-xl p-2.5 border border-amber-100">
+            <div class="text-[11px] text-amber-700 font-medium">要復習（ミス）</div>
+            <div class="text-lg sm:text-xl font-extrabold text-amber-700 mt-0.5"><span id="wrongCountDisplay">0</span><span class="text-xs font-normal ml-0.5">問</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 出題設定カード -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200 space-y-5">
+        
+        <!-- 出題形式 -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-2">1. 出題形式を選ぶ</label>
+          <div class="grid grid-cols-2 gap-2" id="typeSelector">
+            <button type="button" data-type="all" class="type-btn active-opt p-3 rounded-xl border-2 border-blue-600 bg-blue-50 text-blue-800 font-bold text-xs sm:text-sm text-left flex items-center justify-between btn-tap">
+              <span>すべて（混合）</span>
+              <span class="text-[11px] bg-blue-600 text-white px-2 py-0.5 rounded-full">48問</span>
+            </button>
+            <button type="button" data-type="tf" class="type-btn p-3 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold text-xs sm:text-sm text-left flex items-center justify-between hover:bg-slate-50 btn-tap">
+              <span>○×問題のみ</span>
+              <span class="text-[11px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full">24問</span>
+            </button>
+            <button type="button" data-type="mc" class="type-btn p-3 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold text-xs sm:text-sm text-left flex items-center justify-between hover:bg-slate-50 btn-tap">
+              <span>4択問題のみ</span>
+              <span class="text-[11px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full">24問</span>
+            </button>
+            <button type="button" data-type="wrong" id="wrongModeBtn" class="type-btn p-3 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold text-xs sm:text-sm text-left flex items-center justify-between hover:bg-slate-50 btn-tap">
+              <span>間違えた問題だけ</span>
+              <span id="wrongBadgeCount" class="text-[11px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">0問</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 単元フィルタ -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-2">2. 出題範囲（単元）</label>
+          <select id="chapterSelect" class="w-full p-3 rounded-xl border border-slate-300 bg-slate-50 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="all">すべての単元（全範囲・P.26〜135）</option>
+            <option value="ch2">第2章：品質保護・化学的変質・保存法・簡便性</option>
+            <option value="ch3">第3章：包装材料・複合フィルム・包装業界フロー</option>
+            <option value="ch4">第4章：酸化防止・医薬品（PTP）・日用品の包装</option>
+            <option value="ch56">第5・6章：計量充填・各種包装機・真空ガス置換・FFS・悪戯防止</option>
+          </select>
+        </div>
+
+        <!-- 出題数 -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-2">3. 出題数</label>
+          <div class="grid grid-cols-3 gap-2" id="limitSelector">
+            <button type="button" data-limit="10" class="limit-btn active-limit py-2.5 px-3 rounded-xl border-2 border-blue-600 bg-blue-50 text-blue-800 font-bold text-sm btn-tap">
+              10問
+            </button>
+            <button type="button" data-limit="20" class="limit-btn py-2.5 px-3 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold text-sm hover:bg-slate-50 btn-tap">
+              20問
+            </button>
+            <button type="button" data-limit="999" class="limit-btn py-2.5 px-3 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold text-sm hover:bg-slate-50 btn-tap">
+              全問
+            </button>
+          </div>
+        </div>
+
+        <!-- メッセージボックス（該当問題0件時用） -->
+        <div id="homeAlert" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-300 text-amber-800 text-xs font-medium"></div>
+
+        <!-- スタートボタン -->
+        <button onclick="startQuiz()" class="w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-base shadow-md shadow-blue-600/20 btn-tap flex items-center justify-center space-x-2">
+          <span>テストを開始する</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- ==================== 2. クイズ出題画面 ==================== -->
+    <section id="quizScreen" class="hidden space-y-4 animate-fade-in">
+      
+      <!-- 進捗バー＆ステータス -->
+      <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200">
+        <div class="flex items-center justify-between text-xs font-bold text-slate-600 mb-2">
+          <span>第 <span id="currentQNum" class="text-blue-600 text-base font-extrabold">1</span> / <span id="totalQNum">10</span> 問</span>
+          <span class="text-slate-500">現在の正解数: <span id="currentScoreNum" class="text-emerald-600 font-extrabold">0</span></span>
+        </div>
+        <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+          <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 10%"></div>
+        </div>
+      </div>
+
+      <!-- 問題カード -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+        <div class="flex flex-wrap items-center gap-2">
+          <span id="qTypeBadge" class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-indigo-100 text-indigo-800">
+            ○×問題
+          </span>
+          <span id="qChapterTag" class="px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-600">
+            第5章
+          </span>
+          <span id="qPageTag" class="text-[11px] text-slate-400 ml-auto">
+            テキスト P.110
+          </span>
+        </div>
+
+        <p id="questionText" class="text-base sm:text-lg font-bold text-slate-900 leading-relaxed">
+          ここに問題文が表示されます。
+        </p>
+
+        <!-- ○×問題用ボタンエリア -->
+        <div id="tfOptionsArea" class="hidden grid grid-cols-2 gap-3 pt-2">
+          <button onclick="submitAnswer(0)" id="tfBtn0" class="tf-choice py-6 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:border-blue-500 hover:bg-blue-50 flex flex-col items-center justify-center btn-tap">
+            <span class="text-4xl font-black text-blue-600 leading-none">○</span>
+            <span class="text-xs font-bold text-slate-600 mt-2">正しい</span>
+          </button>
+          <button onclick="submitAnswer(1)" id="tfBtn1" class="tf-choice py-6 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:border-rose-500 hover:bg-rose-50 flex flex-col items-center justify-center btn-tap">
+            <span class="text-4xl font-black text-rose-600 leading-none">×</span>
+            <span class="text-xs font-bold text-slate-600 mt-2">誤り</span>
+          </button>
+        </div>
+
+        <!-- 4択問題用ボタンエリア -->
+        <div id="mcOptionsArea" class="hidden space-y-2.5 pt-1">
+          <!-- JSで4つの選択肢ボタンを生成 -->
+        </div>
+      </div>
+
+      <!-- 回答後の解説カード -->
+      <div id="feedbackCard" class="hidden rounded-2xl p-5 border-2 shadow-sm space-y-3 animate-fade-in">
+        <div class="flex items-center space-x-2">
+          <span id="feedbackIcon" class="w-7 h-7 rounded-full flex items-center justify-center font-black text-white text-sm">✓</span>
+          <h3 id="feedbackTitle" class="text-lg font-extrabold">正解！</h3>
+          <span id="correctAnswerLabel" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-white/80 ml-auto"></span>
+        </div>
+        <p id="explanationText" class="text-sm text-slate-800 leading-relaxed bg-white/75 p-3.5 rounded-xl">
+          解説文がここに入ります。
+        </p>
+        <button onclick="nextQuestion()" id="nextBtn" class="w-full py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow btn-tap">
+          次の問題へ →
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ==================== 3. 結果画面 ==================== -->
+    <section id="resultScreen" class="hidden space-y-4 animate-fade-in">
+      
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 text-center space-y-4">
+        <div class="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-extrabold">
+          テスト結果発表
+        </div>
+        
+        <div>
+          <div class="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight">
+            <span id="resultScore">8</span> <span class="text-xl font-bold text-slate-400">/ <span id="resultTotal">10</span> 問正解</span>
+          </div>
+          <div class="mt-2 text-lg font-extrabold text-blue-600">
+            正答率：<span id="resultPercent">80</span>%（判定：<span id="resultRank">Aランク</span>）
+          </div>
+        </div>
+
+        <p id="resultComment" class="text-sm text-slate-600 bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+          素晴らしい成績です！この調子で本番もバッチリです。
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+          <button id="retryWrongBtn" onclick="retryWrongQuestions()" class="hidden py-3.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-sm shadow btn-tap">
+            間違えた問題だけ再挑戦
+          </button>
+          <button onclick="goHome()" class="py-3.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-sm shadow btn-tap sm:col-span-1">
+            設定トップに戻る
+          </button>
+        </div>
+      </div>
+
+      <!-- 振り返りリスト -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200 space-y-3">
+        <h3 class="text-sm font-extrabold text-slate-800 flex items-center justify-between">
+          <span>今回の解答と解説一覧</span>
+          <span class="text-xs font-normal text-slate-500">タップで詳細確認</span>
+        </h3>
+        <div id="reviewList" class="space-y-3">
+          <!-- JSで生成 -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- 確認モーダル（alert/confirm代替） -->
+  <div id="customModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-xl space-y-4 animate-fade-in">
+      <h3 id="modalTitle" class="text-base font-extrabold text-slate-900">確認</h3>
+      <p id="modalMessage" class="text-sm text-slate-600 leading-relaxed">メッセージ</p>
+      <div class="flex justify-end space-x-2 pt-2">
+        <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs btn-tap">
+          キャンセル
+        </button>
+        <button id="modalConfirmBtn" class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs btn-tap">
+          実行する
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- フッター -->
+  <footer class="text-center py-4 text-[11px] text-slate-400">
+    配布テキスト要点マスター・確認テスト対策アプリ
+  </footer>
+
+  <script>
+    /**
+     * 問題データベース（全48問：○×問題 24問 ＋ 4択問題 24問）
+     * 配布本のすべてのアップロード画像（P.26〜135）から厳選作成
+     */
+    const QUESTIONS = [
+      // ================= 第2章：品質保護・化学的変質・保存法・簡便性 =================
+      {
+        id: 1,
+        type: 'tf',
+        chapter: 'ch2',
+        chapterName: '第2章：包装の保護性',
+        page: 'P.26-27',
+        q: '青果物の包装では、呼吸を完全に止めて鮮度を保つため、酸素透過性をゼロにした包材を用いるのが最も望ましい。',
+        options: ['○', '×'],
+        answer: 1,
+        explanation: '誤り（×）。青果物は鮮度を保持するために適度な呼吸を持続させる必要があり、酸素透過性と二酸化炭素透過性のバランスが重要です。'
+      },
+      {
+        id: 2,
+        type: 'tf',
+        chapter: 'ch2',
+        chapterName: '第2章：食品の保存法',
+        page: 'P.28-29',
+        q: '海苔などの乾燥食品の包装には、吸湿による品質劣化を防ぐため「防湿包装」が用いられる。',
+        options: ['○', '×'],
+        answer: 0,
+        explanation: '正しい（○）。乾燥食品は水分・湿気によって食感や風味が損なわれるため、水蒸気遮断性に優れた防湿包装が適しています。'
+      },
+      {
+        id: 3,
+        type: 'tf',
+        chapter: 'ch2',
+        chapterName: '第2章：化学的変質',
+        page: 'P.32-33',
+        q: '還元糖とアミノ酸・ペプチドが反応して褐変物質（メラノイジン）を生成する非酵素的褐変を「メイラード反応」という。',
+        options: ['○', '×'],
+        answer: 0,
+        explanation: '正しい（○）。メイラード反応は食品に好ましい色と香りを与える加熱褐変と、色調の暗色化や褐変臭など変質の原因になる酸化褐変があります。'
+      },
+      {
+        id: 4,
+        type: 'tf',
+        chapter: 'ch2',
+        chapterName: '第2章：包装の簡便性',
+        page: 'P.38-39',
+        q: '可溶性の包材で洗濯物を包み、そのまま洗濯機に入れて洗濯できる包装も「簡便性」の機能の一例である。',
+        options: ['○', '×'],
+        answer: 0,
+        explanation: '正しい（○）。包材自体に加熱・冷却機能を持たせたものや、可溶性包材でそのまま洗濯できるものも簡便性の範疇です。'
+      },
+      {
+        id: 5,
+        type: 'mc',
+        chapter: 'ch2',
+        chapterName: '第2章：包装の保護性',
+        page: 'P.26-27',
+        q: '包装資材の保護性に求められる3つの機能特性は「化学的・物理的な安定性」「物理的に充分な強度」と、もう1つは何か？',
+        options: [
+          '酸素・水分・水蒸気などに対する遮断性',
+          'すべての光線を完全に透過させる透明性',
+          '内容物を急速に冷凍させる熱伝導性',
+          '包装後に自動で分解される生分解性'
+        ],
+        answer: 0,
+        explanation: '包装資材に求められる機能特性の3点は①化学的・物理的な安定性、②物理的に充分な強度、③酸素・水分・水蒸気などに対する遮断性です。'
+      },
+      {
+        id: 6,
+        type: 'mc',
+        chapter: 'ch2',
+        chapterName: '第2章：変質要因',
+        page: 'P.27',
+        q: '内容物の変質要因のうち「人為的要因」への対策として、テキストの図に挙げられている包装の例はどれか？',
+        options: [
+          'シュリンク包装・キャップシールで守る包装',
+          '衝撃を吸収する発泡スチロール緩衝包装',
+          '呼吸を助ける有孔フィルム包装',
+          'レトルト殺菌による無菌包装'
+        ],
+        answer: 0,
+        explanation: '悪戯・子供・高齢者・テロなどの人為的要因に対しては、シュリンク包装やキャップシールで守る包装が例示されています。'
+      },
+      {
+        id: 7,
+        type: 'mc',
+        chapter: 'ch2',
+        chapterName: '第2章：化学的変質',
+        page: 'P.32-33',
+        q: '味噌などの容器包装で「乾燥しない」ために求められる機能は何か？',
+        options: [
+          '水蒸気遮断性',
+          '酸素透過性',
+          '紫外線透過性',
+          '吸湿促進性'
+        ],
+        answer: 0,
+        explanation: '味噌の容器では、乾燥を防ぐ「水蒸気遮断性」、匂いを逃がさない「保香性（香気遮断性）」、内部の酸化・褐変を防ぐ「酸素遮断性」が重要です。'
+      },
+      {
+        id: 8,
+        type: 'mc',
+        chapter: 'ch2',
+        chapterName: '第2章：包装の簡便性',
+        page: 'P.39',
+        q: 'バラバラな商品を集約する包装は（A）、医薬品を1回ずつ小分けして変質から守る包装は（B）である。正しい組み合わせはどれか？',
+        options: [
+          '(A) ブリスターパック　(B) PTP包装',
+          '(A) スティック包装　(B) 組合せ包装',
+          '(A) ポーションパック　(B) シュリンク包装',
+          '(A) 緩衝包装　(B) 防湿包装'
+        ],
+        answer: 0,
+        explanation: 'ブリスターパックはバラバラな商品を集約する包装、PTP包装は医薬品を1回ずつ小分けして変質から守る包装です。'
+      },
+
+      // ================= 第3章：包装材料・複合フィルム・包装業界フロー =================
+      {
+        id: 9,
+        type: 'tf',
+        chapter: 'ch3',
+        chapterName: '第3章：包装業界の構成',
+        page: 'P.46-47',
+        q: '包装資材の2019年出荷金額比において、最も高い割合を占めているのは「紙・板紙（43.6%）」であり、次いで「プラスチック（30.1%）」である。',
+        options: ['○', '×'],
+        answer: 0,
+        explanation: '正しい（○）。2019年出荷金額比は、紙・板紙43.6%、プラスチック30.1%、金属14.3%、ガラス2.5%、木製2.5%、その他7.7%です。'
+      },
+      {
+        id: 10,
+        type: 'tf',
+        chapter: 'ch3',
+        chapterName: '第3章：包装業界のフロー',
+        page: 'P.46-47',
+        q: 'ガラス工業における包装製造フローでは、回収されたガラスくずである「カレット」をリサイクル原料として利用している。',
+        options: ['○', '×'],
+        answer: 0,
+        explanation: '正しい（○）。珪砂・ソーダ灰・炭酸カルシウム（バッチ）に加え、リサイクルされたカレットがガラス瓶の製造に活用されています。'
+      },
+      {
+        id: 11,
+        type: 'tf',
+        chapter: 'ch3',
+        chapterName: '第3章：複合フィルム',
+        page: 'P.66-67',
+        q: 'プラスチック単体フィルムであっても、厚みを増やすだけですべての包装機能（ガス遮断性・強度・ヒートシール性など）を1種類で満足させることができる。',
+        options: ['○', '×'],
+        answer: 1,
+        explanation: '誤り（×）。プラスチック単体ではすべての機能を満足できないため、異なるフィルムやアルミ箔などを積層して短所をカバーし長所を増長させます。'
+      },
+      {
+        id: 12,
+        type: 'tf',
+        chapter: 'ch3',
+        chapterName: '第3章：フィルム積層方式',
+        page: 'P.66-67',
+        q: '接着剤を使ってフィルム同士を貼合わせる「ドライラミネート方式」は、小ロット単位で生産できるレトルト食品袋などに用いられる。',
+        options: ['○', '×'],
+        answer: 0,
+        explanation: '正しい（○）。一方、溶融し押出された樹脂が接着剤として働く「エキストルーダー方式」は、スナック袋などロットの大きな製品に用いられます。'
+      },
+      {
+        id: 13,
+        type: 'mc',
+        chapter: 'ch3',
+        chapterName: '第3章：包装産業の規模',
+        page: 'P.46',
+        q: '2019年の包装産業の規模として、包装資材出荷額（約5兆7000億円）と包装機械（約5000億円）を合わせた合計規模は約いくらか？',
+        options: [
+          '約6兆2000億円',
+          '約1兆2000億円',
+          '約10兆5000億円',
+          '約60兆円'
+        ],
+        answer: 0,
+        explanation: '包装資材約5兆7000億円＋包装機械約5000億円＝合計約6兆2000億円の規模です（関連産業全体ではその10倍の約60兆円と推定されます）。'
+      },
+      {
+        id: 14,
+        type: 'mc',
+        chapter: 'ch3',
+        chapterName: '第3章：包装業界の役割',
+        page: 'P.46',
+        q: '包装資材に印刷や貼合せを施し、包装内容品のニーズに合わせて様々な包装材を組み合わせて包装容器にする企業を何というか？',
+        options: [
+          'コンバーター',
+          'インテグレーター',
+          'ディベロッパー',
+          'ベンダー'
+        ],
+        answer: 0,
+        explanation: '包装資材に印刷や貼合せを施して包装容器とする企業は「コンバーター」と呼ばれ、幅広い役割を担っています。'
+      },
+      {
+        id: 15,
+        type: 'mc',
+        chapter: 'ch3',
+        chapterName: '第3章：複合フィルム構成',
+        page: 'P.66',
+        q: '積層フィルムの基本構成は「表面基材 ／ バリア層 ／ （　　）」である。（　　）に入る最も適切なものはどれか？',
+        options: [
+          'シーラント（ヒートシール適性）',
+          '印刷インキ層',
+          '剥離ライナー層',
+          '紫外線吸収コート層'
+        ],
+        answer: 0,
+        explanation: '積層フィルムの基本構成は、外側から「表面基材／バリア層／シーラント（ヒートシール適性）」となります。'
+      },
+      {
+        id: 16,
+        type: 'mc',
+        chapter: 'ch3',
+        chapterName: '第3章：フィルム積層方式',
+        page: 'P.66-67',
+        q: '溶融し押出された樹脂が接着剤として働いて貼合わせる方式で、スナック袋やインスタントラーメン袋など比較的ロットの大きな製品に用いられる積層方式はどれか？',
+        options: [
+          'エキストルーダー方式（エキストルーダーラミ）',
+          'ドライラミネート方式',
+          'ウェットラミネート方式',
+          'ホットメルトコーティング方式'
+        ],
+        answer: 0,
+        explanation: '押出機とTダイを用いて溶融樹脂で貼合わせる「エキストルーダー方式」は、大量ロットの食品袋などに広く使われます。'
+      },
+
+      // ================= 第4章：酸化防止・医薬品（PTP）・日用品の包装 =================
+      {
+        id: 17,
+        type: 'tf',
+        chapter: 'ch4',
+        chapterName: '第4章：酸化・変色の防止',
+        page: 'P.80-81',
+        q: '油性食品などの酸化度評価には、酸化で生成されるハイドロパーオキサイドを測定する「過酸化物価（POV）」や、カルボニル価、酸価、TBA値などが用いられる。',
+        options: ['○', '×'],
+        answer: 0,
+        explanation: '正しい（○）。POV（過酸化物価）やカルボニル価・酸価・TBA値などが油脂の変質指標として使われます。'
+      },
+      {
+        id: 18,
+        type: 'tf',
+        chapter: 'ch4',
+        chapterName: '第4章：医薬品の包装',
+        page: 'P.88-89',
+        q: 'PTP包装は防湿性に優れ長期保存ができるが、一度取り出したかどうか未使用性の判別ができない欠点がある。',
+        options: ['○', '×'],
+        answer: 1,
+        explanation: '誤り（×）。PTP包装はポケットから錠剤を押すとアルミ箔が破れて取り出せるため、未使用性の判別が容易にできます。'
+      },
+      {
+        id: 19,
+        type: 'tf',
+        chapter: 'ch4',
+        chapterName: '第4章：医療品の包装',
+        page: 'P.88-89',
+        q: '注射針やカテーテルなどの医療品は、使い回し防止や滅菌の手間からプラスチック製のディスポーザブル器具が採用され、γ線や有害ガスなどで滅菌されている。',
+        options: ['○', '×'],
+        answer: 0,
+        explanation: '正しい（○）。医療品は直接血管に入る器具と同じレベルの衛生性が求められ、密閉包装後にγ線や有害ガス等で滅菌されます。'
+      },
+      {
+        id: 20,
+        type: 'tf',
+        chapter: 'ch4',
+        chapterName: '第4章：日用品の包装',
+        page: 'P.90-91',
+        q: '日用品として提供される容器包装（バケツなど）は、使う人によって食品や飲料水を入れる用途にも使われることがあるため、食品と同レベルの衛生性が求められる。',
+        options: ['○', '×'],
+        answer: 0,
+        explanation: '正しい（○）。日用品は顧客の手に渡った後の用途を特定できない特徴があるため、高い衛生性が求められます。'
+      },
+      {
+        id: 21,
+        type: 'mc',
+        chapter: 'ch4',
+        chapterName: '第4章：酸化防止法',
+        page: 'P.80',
+        q: '油脂の酸化防止法のうち「物理的手法」に該当するものの組み合わせとして正しいものはどれか？',
+        options: [
+          '真空包装、窒素置換包装、脱酸素剤封入包装',
+          '酸化防止剤の添加、ビタミンCの配合',
+          '保存料の添加、加熱殺菌処理',
+          '糖分濃度の調整、pHの低下'
+        ],
+        answer: 0,
+        explanation: '酸化防止剤を添加するのが「化学的手法」、袋内酸素を減らす真空包装・窒素置換包装・脱酸素剤封入包装などが「物理的手法」です。'
+      },
+      {
+        id: 22,
+        type: 'mc',
+        chapter: 'ch4',
+        chapterName: '第4章：医薬品の包装',
+        page: 'P.88',
+        q: '包装医薬品は厚労省の「安定性試験ガイドライン」に基づく長期保存試験（1年間）や加速試験に適合する必要がある。加速試験の条件はどれか？',
+        options: [
+          '40℃、6ヶ月間',
+          '25℃、3ヶ月間',
+          '60℃、1ヶ月間',
+          '5℃、12ヶ月間'
+        ],
+        answer: 0,
+        explanation: 'テキストP.88の記載通り、長期保存試験（1年間）や加速試験（40℃、6ヶ月間）などの過酷な条件下でも薬剤効果が落ちない包装が求められます。'
+      },
+      {
+        id: 23,
+        type: 'mc',
+        chapter: 'ch4',
+        chapterName: '第4章：医薬品の包装形態',
+        page: 'P.89',
+        q: '医薬品の形状と一般的な包装形態の組み合わせとして、**誤っているもの**はどれか？',
+        options: [
+          '軟膏薬 ―― プラスチック複合袋・ガラスびん',
+          '散剤（粉体） ―― プラスチック複合袋',
+          '顆粒剤 ―― ストリップ包装、スティック包装、深絞り包装',
+          '点眼薬・点鼻薬 ―― プラスチック成形容器'
+        ],
+        answer: 0,
+        explanation: '軟膏薬の包装形態は「金属チューブ、プラスチック複合チューブ」です。他はすべて表の記載通りです。'
+      },
+      {
+        id: 24,
+        type: 'mc',
+        chapter: 'ch4',
+        chapterName: '第4章：日用品の自主規格',
+        page: 'P.90',
+        q: '日本プラスチック日用品工業組合が自主規格の適合品に与えるマークとして、正しい組み合わせはどれか？',
+        options: [
+          '品質・性能には「品検済」、衛生には「衛検済」',
+          '品質・性能には「衛検済」、衛生には「品検済」',
+          '品質・性能には「優良品」、衛生には「安全済」',
+          '品質・性能には「JIS済」、衛生には「ISO済」'
+        ],
+        answer: 0,
+        explanation: '品質・性能には「品検済」のマーク、衛生には「衛検済」のマークを与え、さらに電子レンジ容器にもマークを与えて安全性を担保しています。'
+      },
+
+      // ================= 第5・6章：計量充填・包装機・真空ガス置換・FFS・悪戯防止 =================
+      {
+        id: 25,
+        type: 'tf',
+        chapter: 'ch56',
+        chapterName: '第5章：計量・計数と充填',
+        page: 'P.108-109',
+        q: '計量方式において、粉粒体・液体・粘体は「容量計量方式」で、固体バラ物は「質量計量方式」で計量するのが一般的である。',
+        options: ['○', '×'],
+        answer: 0,
+        explanation: '正しい（○）。顆粒体や固液混合物は容量・質量の両方で計るのが一般的です。'
+      },
+      {
+        id: 26,
+        type: 'tf',
+        chapter: 'ch56',
+        chapterName: '第5章：殺菌と充填温度',
+        page: 'P.108',
+        q: '低温充填の無菌充填用容器は、冷却時の減圧による変形を防ぐため、ホットパック用容器よりも肉厚で耐熱性の高い剛性容器が必須となる。',
+        options: ['○', '×'],
+        answer: 1,
+        explanation: '誤り（×）。耐熱性と肉厚の剛性容器が必要なのは「ホットパック用容器」であり、低温充填の無菌充填用容器は薄肉の安価な容器で十分です。'
+      },
+      {
+        id: 27,
+        type: 'tf',
+        chapter: 'ch56',
+        chapterName: '第5章：ピロー・給袋包装機',
+        page: 'P.110-111',
+        q: '縦形ピロー包装機は、フィルムを上部で円筒状にして胴部を熱シールし、内容物を上から落下させて充填・シールする方式である。',
+        options: ['○', '×'],
+        answer: 0,
+        explanation: '正しい（○）。出来上がりの包装袋は横形ピローと同じ「枕」形になり、自重のある液体・粘体・粉体や落下しても破損しない菓子などに適します。'
+      },
+      {
+        id: 28,
+        type: 'tf',
+        chapter: 'ch56',
+        chapterName: '第5章：箱詰め包装',
+        page: 'P.110',
+        q: '箱類への充填は横充填が一般的だが、びんなどは上から入れる必要があり、ロボットでびんを吊り上げて入れる方式が採用されている。',
+        options: ['○', '×'],
+        answer: 0,
+        explanation: '正しい（○）。折畳み箱は横方向から押し出す横充填が主流ですが、びん類はロボットで吊り上げて上から充填します。'
+      },
+      {
+        id: 29,
+        type: 'tf',
+        chapter: 'ch56',
+        chapterName: '第5章：横形ピロー包装機',
+        page: 'P.112-113',
+        q: '横形ピロー包装機は、即席ラーメンや細長いスナック菓子など折れやすく壊れやすい製品でも、横方向にガードしながら運び包装できる。',
+        options: ['○', '×'],
+        answer: 0,
+        explanation: '正しい（○）。さらにフィルムの上に乗せて包み込む「逆横形ピロー方式」もあり、柔らかく壊れやすい商品に最適です。'
+      },
+      {
+        id: 30,
+        type: 'tf',
+        chapter: 'ch56',
+        chapterName: '第5章：真空・ガス置換包装',
+        page: 'P.114-115',
+        q: '脱酸素剤封入包装は酸素吸収率が抜群によく食品中の酸素まで吸収できるため、多孔質で柔らかい製品でも形が崩れることはない。',
+        options: ['○', '×'],
+        answer: 1,
+        explanation: '誤り（×）。空気中の21%の酸素を吸収すると20%酸素容積が減少するため、多孔質で柔らかい製品は形が崩れてしまい不適品です。'
+      },
+      {
+        id: 31,
+        type: 'tf',
+        chapter: 'ch56',
+        chapterName: '第5章：容器成形・充填・封緘',
+        page: 'P.116-117',
+        q: 'FFS機（Form Fill Seal機）は、シートの繰り出しから成形・充填・熱封緘・切断まで全自動で行う一貫生産システムのため、中間製品が発生しない。',
+        options: ['○', '×'],
+        answer: 0,
+        explanation: '正しい（○）。原材料から直接製品ができるため中間製品が発生せず、人が触れないため衛生的で無菌包装用機械としても最適です。'
+      },
+      {
+        id: 32,
+        type: 'tf',
+        chapter: 'ch56',
+        chapterName: '第5章：FFS機の特徴',
+        page: 'P.116',
+        q: 'FFS機は設備費が非常に安価であるため、多品種・小ロット生産に最も向いている包装システムである。',
+        options: ['○', '×'],
+        answer: 1,
+        explanation: '誤り（×）。FFS機は「設備費がかかり、小ロット生産には向かない（大ロット製品に適する）」という特徴があります。'
+      },
+      {
+        id: 33,
+        type: 'tf',
+        chapter: 'ch56',
+        chapterName: '第6章：悪戯防止包装',
+        page: 'P.134-135',
+        q: '悪戯を完全に防止することはガラスや金属容器でも不可能なため、開封した証拠を残す「未使用性・開封確認性」を高めることが重要になる。',
+        options: ['○', '×'],
+        answer: 0,
+        explanation: '正しい（○）。包装による完全な悪戯防止は不可能であり、開封の異常を感知できる未使用性（シュリンク包装、PPキャップ等）が重要です。'
+      },
+      {
+        id: 34,
+        type: 'tf',
+        chapter: 'ch56',
+        chapterName: '第6章：チャイルドレジスタント',
+        page: 'P.134-135',
+        q: 'チャイルド・レジスタント包装では、乳幼児の誤飲を防ぐため「押しながら回す」2動作構造や「粘着フィルムを剥がして押し出す」などの工夫が用いられる。',
+        options: ['○', '×'],
+        answer: 0,
+        explanation: '正しい（○）。プッシュ・アンド・ターン方式やピールオフ式、粘着フィルム貼合せ式などが代表例です。'
+      },
+      {
+        id: 35,
+        type: 'tf',
+        chapter: 'ch56',
+        chapterName: '第6章：誤食防止包装',
+        page: 'P.134-135',
+        q: '脱酸素剤などの誤食防止袋には、子供や高齢者が噛み切れないように、中間層に「ワリフ」などの強度の高い材料を入れた包装が用いられる。',
+        options: ['○', '×'],
+        answer: 0,
+        explanation: '正しい（○）。外部（紙またはプラスチック）・中間層（ワリフ）・内部（プラスチック）の3層構造などで強度を高め破れないようにしています。'
+      },
+      {
+        id: 36,
+        type: 'tf',
+        chapter: 'ch56',
+        chapterName: '第5章：連続式真空包装機',
+        page: 'P.115',
+        q: 'バッチ式真空包装機は、連続式真空包装機の工程（袋供給〜真空・シール・冷却・排出）を人手で行う方式である。',
+        options: ['○', '×'],
+        answer: 0,
+        explanation: '正しい（○）。P.115の図解にある通り、バッチ式は連続式の工程を人手で行う方式です。'
+      },
+      {
+        id: 37,
+        type: 'mc',
+        chapter: 'ch56',
+        chapterName: '第5章：充填方法',
+        page: 'P.108-109',
+        q: '通常の飲料を約93℃まで昇温して殺菌してから容器に充填する方式を何というか？',
+        options: [
+          'ホットパック（熱充填）',
+          'コールドパック（冷充填）',
+          'レトルト後殺菌',
+          'ガスフラッシュ充填'
+        ],
+        answer: 0,
+        explanation: '93℃まで昇温・殺菌してから充填する方式を「ホットパック（熱充填）」といい、無菌充填とともに「前殺菌」に分類されます。'
+      },
+      {
+        id: 38,
+        type: 'mc',
+        chapter: 'ch56',
+        chapterName: '第5章：計量・充填機',
+        page: 'P.109',
+        q: '充填機と対象品の組み合わせとして、P.109の表・図と合致しているものはどれか？',
+        options: [
+          '小麦粉 ―― オーガー（スクリュー）計量充填機',
+          '清涼飲料水 ―― コンピュータスケール組合せ充填',
+          'ピーマン ―― 液面下充填方式',
+          '味噌 ―― 傾斜と振動による落下充填'
+        ],
+        answer: 0,
+        explanation: '小麦粉などの粉体はオーガー（スクリュー）で一定量を切り出して充填します。ピーマンはコンピュータスケール、味噌は一定量の升で搾り落下充填です。'
+      },
+      {
+        id: 39,
+        type: 'mc',
+        chapter: 'ch56',
+        chapterName: '第5章：給袋充填包装機',
+        page: 'P.110-111',
+        q: '給袋充填包装機に関する記述として、**最も適切なもの**はどれか？',
+        options: [
+          'あらかじめ作られた袋を供給し、熱シール時に空気が抜けやすいよう下から押し上げたり振動を与えたりする',
+          'ロール状のフィルムから自動で円筒状の袋を作りながら充填する方式である',
+          '真空装置を取り付けることができないため、レトルト食品には一切使えない',
+          '回転テーブルは使わず、すべて直線ラインのみで包装する'
+        ],
+        answer: 0,
+        explanation: '給袋充填包装機は出来上がった袋を使用し、多くの袋形状に適用でき、真空装置を取り付けてレトルト食品包装にも適しています。'
+      },
+      {
+        id: 40,
+        type: 'mc',
+        chapter: 'ch56',
+        chapterName: '第5章：横形ピロー包装機',
+        page: 'P.112',
+        q: '近年の横形ピロー包装機では、コンピュータ制御によって作動する小型の（A）を使用してフィルムの張りを微調整し、（B）の導入で製品別の初期条件設定が容易になった。正しい組み合わせはどれか？',
+        options: [
+          '(A) サーボモーター　(B) 学習形コンピュータ',
+          '(A) 油圧シリンダ　(B) 外部シーケンサ',
+          '(A) ステッピングモーター　(B) 画像処理センサ',
+          '(A) 空気圧アクチュエータ　(B) 温度コントローラ'
+        ],
+        answer: 0,
+        explanation: '小型の「サーボモーター」と「学習形コンピュータ」の導入により、安定したきれいな包装と初期条件の容易な設定が可能になりました。'
+      },
+      {
+        id: 41,
+        type: 'mc',
+        chapter: 'ch56',
+        chapterName: '第5章：上包み包装機',
+        page: 'P.112-113',
+        q: '上包み包装機の動作速度と対象製品の組み合わせとして、正しいものはどれか？',
+        options: [
+          '軽いたばこなどの製品は「回転中に高速」で包み込む',
+          '大形で重い事務用紙束等は「回転中に超高速」で包装する',
+          '中形でやや軽い土産品等は「直線的に低速」で包装する',
+          '飴や和菓子をひねる「ひねり包装」は上包み包装には含まれない'
+        ],
+        answer: 0,
+        explanation: '大形で重い製品は直線的にやや低速、中形でやや軽い土産品は上下移動中に中速、軽いたばこ等は回転中に高速で包み込みます。'
+      },
+      {
+        id: 42,
+        type: 'mc',
+        chapter: 'ch56',
+        chapterName: '第5章：真空・ガス置換の比較',
+        page: 'P.115',
+        q: '「真空包装とガス置換包装の比較表」における残留酸素濃度の数値として、正しい組み合わせはどれか？',
+        options: [
+          '真空包装：0.1%以下 ／ ガスフラッシュ方式：0.2〜5%',
+          '真空包装：0.2〜5% ／ ガスフラッシュ方式：0.1%以下',
+          '真空包装：5〜10% ／ ガスフラッシュ方式：0.1%',
+          '真空包装：0.1%以下 ／ ガスフラッシュ方式：10%以上'
+        ],
+        answer: 0,
+        explanation: '真空包装と脱酸素剤封入包装は「0.1%以下」、チャンバー方式ガス置換は「0.1%」、ガスフラッシュ方式は「0.2〜5%」です。'
+      },
+      {
+        id: 43,
+        type: 'mc',
+        chapter: 'ch56',
+        chapterName: '第5章：鮮度保持剤',
+        page: 'P.114',
+        q: '有機系のビタミンCなどを用いた鮮度保持剤は、酸素を吸収した後に何を発生させて微生物の繁殖を抑えるか？',
+        options: [
+          '二酸化炭素（CO2）',
+          '窒素ガス（N2）',
+          'オゾン（O3）',
+          'エチレンガス'
+        ],
+        answer: 0,
+        explanation: '有機系のビタミンCなどを用いた剤は、酸素を吸収した後に二酸化炭素を発生させ、酸化防止と同時に微生物の繁殖を抑えます。'
+      },
+      {
+        id: 44,
+        type: 'mc',
+        chapter: 'ch56',
+        chapterName: '第5章：深絞り包装機',
+        page: 'P.115-116',
+        q: '深絞り包装機（大森機械工業などの主力機）の工程順と主な用途として、正しいものはどれか？',
+        options: [
+          '加熱・成形 →（充填）→ 真空シール → カッター ／ スライスハムなどに使用',
+          'カッター → 真空シール → 加熱・成形 ／ 炭酸飲料缶に使用',
+          '真空シール → 加熱・成形 → カッター ／ 乾燥海苔のみに使用',
+          '充填 → カッター → 加熱・成形 ／ 段ボール箱の封緘に使用'
+        ],
+        answer: 0,
+        explanation: '深絞り包装機は柔らかいフィルムを加熱・成形し、内容物を充填して真空シール・カットする形式で、スライスハムなどに使用されます。'
+      },
+      {
+        id: 45,
+        type: 'mc',
+        chapter: 'ch56',
+        chapterName: '第5章：FFS機の用途',
+        page: 'P.116-117',
+        q: 'インラインのFFS機の有名な用途としてテキストに挙げられている食品はどれか？',
+        options: [
+          '無菌包装のコーヒークリーム、プリン、乳酸菌飲料など',
+          '一斗缶入りの業務用サラダ油',
+          'ガラス瓶入りの高級ウイスキー',
+          '段ボール箱入りの宅配みかん'
+        ],
+        answer: 0,
+        explanation: '無菌包装のコーヒークリームが有名で、プリン、乳酸菌飲料、のど飴などの食品や医薬品のPTP包装に使用されます。'
+      },
+      {
+        id: 46,
+        type: 'mc',
+        chapter: 'ch56',
+        chapterName: '第6章：悪戯防止包装の種類',
+        page: 'P.135',
+        q: 'アルミ製キャップで、キャップと同時に下部をタイトにびんに固定し、開封時はミシン目から簡単に破壊・開封される包装を何というか？',
+        options: [
+          'ピルファープルーフキャップ（PPキャップ）',
+          'キャップシール',
+          'オーバーラップ包装',
+          'ピールオフ包装'
+        ],
+        answer: 0,
+        explanation: 'ピルファープルーフキャップ（PPキャップ）は、高級ウイスキーや飲料びんなどに広く普及しているアルミ製キャップです。'
+      },
+      {
+        id: 47,
+        type: 'mc',
+        chapter: 'ch56',
+        chapterName: '第6章：悪戯防止包装の特徴',
+        page: 'P.135',
+        q: '「特に未使用機能を持たせた包装」の表に記載されている内容として、**誤っているもの**はどれか？',
+        options: [
+          'シュリンク包装は加熱収縮させるため、開封後も簡単に元へ復元できる',
+          'オーバーラップ包装は開封時に破れ、開封証拠が残る（たばこ、CD包装）',
+          'キャップシールはびん栓の安全性を高めるシュリンク包装の応用である',
+          'いたずら防止ラベルは、剥離すると変色するなど破壊の証拠が残る'
+        ],
+        answer: 0,
+        explanation: 'シュリンク包装は加熱収縮させると「元へ復元できない」ため、開封すると破壊されやすく未使用性の確認に有効です。'
+      },
+      {
+        id: 48,
+        type: 'mc',
+        chapter: 'ch56',
+        chapterName: '第5章：窒素ガス吹付け包装',
+        page: 'P.114-115',
+        q: '包装機上で不活性ガスを注ぎ付けながら空気と入れ替える「ガスフラッシュ方式」に関する記述として、正しいものはどれか？',
+        options: [
+          '空気を抜きとる管が別の場所にあるとガス置換率はよくなり、削り節袋・ココア袋などに使用される',
+          '真空チャンバー内で減圧するため、設備投資が全方式の中で最も大きい',
+          '液体製品の包装に最も適しており、固形物には使えない',
+          '不活性ガスには酸素と水素の混合ガスが必ず使われる'
+        ],
+        answer: 0,
+        explanation: 'ガスフラッシュ方式は空気を抜きとる管が別の場所にあると置換率がよくなり、削り節袋やココア袋などに使われます（不活性ガスは窒素や二酸化炭素）。'
+      }
+    ];
+
+    // ================= 状態管理 =================
+    const STORAGE_KEY_WRONG = 'omori_pkg_quiz_wrong_ids_v1';
+    const STORAGE_KEY_BEST = 'omori_pkg_quiz_best_score_v1';
+
+    let selectedType = 'all';   // 'all' | 'tf' | 'mc' | 'wrong'
+    let selectedLimit = 10;     // 10 | 20 | 999
+    let quizQueue = [];
+    let currentIndex = 0;
+    let score = 0;
+    let sessionResults = [];    // { qObj, userAnswer, isCorrect }
+    let answeredCurrent = false;
+
+    // 初期化
+    window.onload = function () {
+      updateHomeStats();
+      setupSelectors();
+    };
+
+    // ローカルストレージ操作
+    function getWrongIds() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_WRONG);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveWrongIds(ids) {
+      try {
+        localStorage.setItem(STORAGE_KEY_WRONG, JSON.stringify(ids));
+      } catch (e) {}
+    }
+
+    function getBestScore() {
+      try {
+        return localStorage.getItem(STORAGE_KEY_BEST);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function saveBestScore(percent) {
+      try {
+        const currentBest = getBestScore();
+        if (currentBest === null || percent > Number(currentBest)) {
+          localStorage.setItem(STORAGE_KEY_BEST, String(percent));
+        }
+      } catch (e) {}
+    }
+
+    // ホーム画面の統計表示更新
+    function updateHomeStats() {
+      document.getElementById('totalCountDisplay').textContent = QUESTIONS.length;
+      const best = getBestScore();
+      document.getElementById('bestScoreDisplay').textContent = best !== null ? best : '--';
+      const wrongIds = getWrongIds();
+      document.getElementById('wrongCountDisplay').textContent = wrongIds.length;
+      document.getElementById('wrongBadgeCount').textContent = wrongIds.length + '問';
+    }
+
+    // 設定ボタンのイベント設定
+    function setupSelectors() {
+      document.querySelectorAll('.type-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.type-btn').forEach(b => {
+            b.classList.remove('active-opt', 'border-2', 'border-blue-600', 'bg-blue-50', 'text-blue-800');
+            b.classList.add('border', 'border-slate-200', 'bg-white', 'text-slate-700');
+          });
+          btn.classList.remove('border', 'border-slate-200', 'bg-white', 'text-slate-700');
+          btn.classList.add('active-opt', 'border-2', 'border-blue-600', 'bg-blue-50', 'text-blue-800');
+          selectedType = btn.getAttribute('data-type');
+          hideHomeAlert();
+        });
+      });
+
+      document.querySelectorAll('.limit-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.limit-btn').forEach(b => {
+            b.classList.remove('active-limit', 'border-2', 'border-blue-600', 'bg-blue-50', 'text-blue-800');
+            b.classList.add('border', 'border-slate-200', 'bg-white', 'text-slate-700');
+          });
+          btn.classList.remove('border', 'border-slate-200', 'bg-white', 'text-slate-700');
+          btn.classList.add('active-limit', 'border-2', 'border-blue-600', 'bg-blue-50', 'text-blue-800');
+          selectedLimit = Number(btn.getAttribute('data-limit'));
+          hideHomeAlert();
+        });
+      });
+
+      document.getElementById('chapterSelect').addEventListener('change', hideHomeAlert);
+    }
+
+    function showHomeAlert(msg) {
+      const el = document.getElementById('homeAlert');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+
+    function hideHomeAlert() {
+      document.getElementById('homeAlert').classList.add('hidden');
+    }
+
+    // 配列シャッフル（Fisher-Yates）
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    // クイズ開始
+    function startQuiz(customList = null) {
+      hideHomeAlert();
+      let pool = [];
+
+      if (customList) {
+        pool = customList;
+      } else {
+        const chapter = document.getElementById('chapterSelect').value;
+        const wrongIds = getWrongIds();
+
+        pool = QUESTIONS.filter(item => {
+          const matchChapter = (chapter === 'all') || (item.chapter === chapter);
+          if (!matchChapter) return false;
+
+          if (selectedType === 'tf') return item.type === 'tf';
+          if (selectedType === 'mc') return item.type === 'mc';
+          if (selectedType === 'wrong') return wrongIds.includes(item.id);
+          return true;
+        });
+
+        if (pool.length === 0) {
+          if (selectedType === 'wrong') {
+            showHomeAlert('現在、該当条件に間違えた問題はありません！別の出題形式を選んでください。');
+          } else {
+            showHomeAlert('選択した条件に該当する問題が見つかりませんでした。');
+          }
+          return;
+        }
+
+        pool = shuffleArray(pool).slice(0, selectedLimit);
+      }
+
+      // 4択問題の選択肢もシャッフルして出題（正解インデックスを再計算）
+      quizQueue = pool.map(q => {
+        if (q.type === 'mc') {
+          const indexed = q.options.map((opt, idx) => ({ text: opt, isCorrect: idx === q.answer }));
+          const shuffled = shuffleArray(indexed);
+          return {
+            ...q,
+            shuffledOptions: shuffled.map(o => o.text),
+            shuffledAnswer: shuffled.findIndex(o => o.isCorrect)
+          };
+        } else {
+          return {
+            ...q,
+            shuffledOptions: ['○', '×'],
+            shuffledAnswer: q.answer
+          };
+        }
+      });
+
+      currentIndex = 0;
+      score = 0;
+      sessionResults = [];
+
+      switchScreen('quizScreen');
+      renderQuestion();
+    }
+
+    // 画面切り替え
+    function switchScreen(screenId) {
+      ['homeScreen', 'quizScreen', 'resultScreen'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      document.getElementById(screenId).classList.remove('hidden');
+
+      const homeBtn = document.getElementById('homeBtn');
+      if (screenId === 'homeScreen') {
+        homeBtn.classList.add('hidden');
+        updateHomeStats();
+      } else {
+        homeBtn.classList.remove('hidden');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 問題の描画
+    function renderQuestion() {
+      answeredCurrent = false;
+      const q = quizQueue[currentIndex];
+      const total = quizQueue.length;
+
+      document.getElementById('currentQNum').textContent = currentIndex + 1;
+      document.getElementById('totalQNum').textContent = total;
+      document.getElementById('currentScoreNum').textContent = score;
+
+      const pct = Math.round(((currentIndex) / total) * 100);
+      document.getElementById('progressBar').style.width = `${Math.max(5, pct)}%`;
+
+      // バッジとタグ
+      const typeBadge = document.getElementById('qTypeBadge');
+      if (q.type === 'tf') {
+        typeBadge.textContent = '○×問題';
+        typeBadge.className = 'px-2.5 py-1 rounded-md text-xs font-extrabold bg-emerald-100 text-emerald-800';
+      } else {
+        typeBadge.textContent = '4択問題';
+        typeBadge.className = 'px-2.5 py-1 rounded-md text-xs font-extrabold bg-blue-100 text-blue-800';
+      }
+
+      document.getElementById('qChapterTag').textContent = q.chapterName;
+      document.getElementById('qPageTag').textContent = 'テキスト ' + q.page;
+      document.getElementById('questionText').textContent = q.q;
+
+      // 解説エリアを隠す
+      document.getElementById('feedbackCard').classList.add('hidden');
+
+      const tfArea = document.getElementById('tfOptionsArea');
+      const mcArea = document.getElementById('mcOptionsArea');
+
+      if (q.type === 'tf') {
+        tfArea.classList.remove('hidden');
+        mcArea.classList.add('hidden');
+        // ボタン状態リセット
+        ['tfBtn0', 'tfBtn1'].forEach(id => {
+          const btn = document.getElementById(id);
+          btn.disabled = false;
+          btn.className = 'tf-choice py-6 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:border-blue-500 hover:bg-blue-50 flex flex-col items-center justify-center btn-tap';
+        });
+      } else {
+        tfArea.classList.add('hidden');
+        mcArea.classList.remove('hidden');
+        mcArea.innerHTML = '';
+
+        const labels = ['ア', 'イ', 'ウ', 'エ'];
+        q.shuffledOptions.forEach((optText, idx) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.id = `mcBtn${idx}`;
+          btn.className = 'mc-choice w-full text-left p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-blue-500 hover:bg-blue-50 flex items-start space-x-3 btn-tap';
+          btn.innerHTML = `
+            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-white border border-slate-300 text-slate-700 font-bold text-xs flex items-center justify-center mt-0.5">${labels[idx]}</span>
+            <span class="text-sm font-medium text-slate-800 leading-snug">${optText}</span>
+          `;
+          btn.onclick = () => submitAnswer(idx);
+          mcArea.appendChild(btn);
+        });
+      }
+    }
+
+    // 回答処理
+    function submitAnswer(chosenIdx) {
+      if (answeredCurrent) return;
+      answeredCurrent = true;
+
+      const q = quizQueue[currentIndex];
+      const isCorrect = (chosenIdx === q.shuffledAnswer);
+
+      // 間違えた問題リストの更新
+      let wrongIds = getWrongIds();
+      if (isCorrect) {
+        score++;
+        document.getElementById('currentScoreNum').textContent = score;
+        wrongIds = wrongIds.filter(id => id !== q.id);
+      } else {
+        if (!wrongIds.includes(q.id)) {
+          wrongIds.push(q.id);
+        }
+      }
+      saveWrongIds(wrongIds);
+
+      sessionResults.push({
+        qObj: q,
+        chosenIdx: chosenIdx,
+        isCorrect: isCorrect
+      });
+
+      // ボタンの見た目変更
+      if (q.type === 'tf') {
+        ['tfBtn0', 'tfBtn1'].forEach((id, idx) => {
+          const btn = document.getElementById(id);
+          btn.disabled = true;
+          if (idx === q.shuffledAnswer) {
+            btn.className = 'py-6 rounded-2xl border-2 border-emerald-500 bg-emerald-50 flex flex-col items-center justify-center ring-2 ring-emerald-500/30';
+          } else if (idx === chosenIdx && !isCorrect) {
+            btn.className = 'py-6 rounded-2xl border-2 border-rose-500 bg-rose-50 flex flex-col items-center justify-center opacity-90';
+          } else {
+            btn.className = 'py-6 rounded-2xl border border-slate-200 bg-slate-50 flex flex-col items-center justify-center opacity-40';
+          }
+        });
+      } else {
+        q.shuffledOptions.forEach((_, idx) => {
+          const btn = document.getElementById(`mcBtn${idx}`);
+          btn.disabled = true;
+          if (idx === q.shuffledAnswer) {
+            btn.className = 'w-full text-left p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 flex items-start space-x-3 ring-2 ring-emerald-500/30';
+          } else if (idx === chosenIdx && !isCorrect) {
+            btn.className = 'w-full text-left p-3.5 rounded-xl border-2 border-rose-500 bg-rose-50 flex items-start space-x-3';
+          } else {
+            btn.className = 'w-full text-left p-3.5 rounded-xl border border-slate-200 bg-slate-50 flex items-start space-x-3 opacity-45';
+          }
+        });
+      }
+
+      // フィードバック表示
+      const fbCard = document.getElementById('feedbackCard');
+      const fbIcon = document.getElementById('feedbackIcon');
+      const fbTitle = document.getElementById('feedbackTitle');
+      const ansLabel = document.getElementById('correctAnswerLabel');
+
+      fbCard.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-400', 'bg-rose-50', 'border-rose-400');
+
+      const labels = ['ア', 'イ', 'ウ', 'エ'];
+      const correctText = q.type === 'tf'
+        ? `正解：${q.shuffledOptions[q.shuffledAnswer]}`
+        : `正解：${labels[q.shuffledAnswer]}`;
+
+      ansLabel.textContent = correctText;
+
+      if (isCorrect) {
+        fbCard.classList.add('bg-emerald-50', 'border-emerald-400');
+        fbIcon.textContent = '✓';
+        fbIcon.className = 'w-7 h-7 rounded-full flex items-center justify-center font-black text-white text-sm bg-emerald-600';
+        fbTitle.textContent = '正解！';
+        fbTitle.className = 'text-lg font-extrabold text-emerald-800';
+        ansLabel.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-200/80 text-emerald-900 ml-auto';
+      } else {
+        fbCard.classList.add('bg-rose-50', 'border-rose-400');
+        fbIcon.textContent = '✕';
+        fbIcon.className = 'w-7 h-7 rounded-full flex items-center justify-center font-black text-white text-sm bg-rose-600';
+        fbTitle.textContent = '不正解…';
+        fbTitle.className = 'text-lg font-extrabold text-rose-800';
+        ansLabel.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-rose-200/80 text-rose-900 ml-auto';
+      }
+
+      document.getElementById('explanationText').textContent = q.explanation;
+
+      const nextBtn = document.getElementById('nextBtn');
+      if (currentIndex + 1 >= quizQueue.length) {
+        nextBtn.textContent = '結果を見る →';
+      } else {
+        nextBtn.textContent = '次の問題へ →';
+      }
+
+      // スムーズに解説へスクロール
+      setTimeout(() => {
+        fbCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 60);
+    }
+
+    // 次の問題へ
+    function nextQuestion() {
+      currentIndex++;
+      if (currentIndex < quizQueue.length) {
+        renderQuestion();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        showResults();
+      }
+    }
+
+    // 結果画面の表示
+    function showResults() {
+      const total = quizQueue.length;
+      const percent = Math.round((score / total) * 100);
+      saveBestScore(percent);
+
+      document.getElementById('resultScore').textContent = score;
+      document.getElementById('resultTotal').textContent = total;
+      document.getElementById('resultPercent').textContent = percent;
+
+      let rank = 'Cランク（もう少し復習しよう）';
+      let comment = 'テキストの要点BOXや比較表を中心に、間違えた問題をもう一度解き直してみましょう！';
+
+      if (percent === 100) {
+        rank = 'Sランク（満点マスター！）';
+        comment = '全問正解おめでとうございます！確認テスト本番も自信を持って臨めます。';
+      } else if (percent >= 80) {
+        rank = 'Aランク（合格圏内！）';
+        comment = '非常に高い理解度です！間違えた数問を復習すれば完璧です。';
+      } else if (percent >= 60) {
+        rank = 'Bランク（あと一歩！）';
+        comment = '基本はよく押さえられています。数値や専門用語の違いを復習しておきましょう。';
+      }
+
+      document.getElementById('resultRank').textContent = rank;
+      document.getElementById('resultComment').textContent = comment;
+
+      // 間違えた問題再挑戦ボタン制御
+      const wrongItems = sessionResults.filter(r => !r.isCorrect);
+      const retryBtn = document.getElementById('retryWrongBtn');
+      if (wrongItems.length > 0) {
+        retryBtn.classList.remove('hidden');
+        retryBtn.textContent = `間違えた ${wrongItems.length} 問だけ再挑戦`;
+      } else {
+        retryBtn.classList.add('hidden');
+      }
+
+      // 振り返りリスト描画
+      const reviewList = document.getElementById('reviewList');
+      reviewList.innerHTML = '';
+
+      sessionResults.forEach((res, idx) => {
+        const q = res.qObj;
+        const badge = res.isCorrect
+          ? '<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800">正解</span>'
+          : '<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-100 text-rose-800">不正解</span>';
+
+        const correctStr = q.shuffledOptions[q.shuffledAnswer];
+        const userStr = q.shuffledOptions[res.chosenIdx];
+
+        const card = document.createElement('div');
+        card.className = `p-3.5 rounded-xl border ${res.isCorrect ? 'border-slate-200 bg-slate-50/70' : 'border-rose-200 bg-rose-50/40'} space-y-2`;
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500">Q${idx + 1}. ${q.chapterName}（${q.page}）</span>
+            ${badge}
+          </div>
+          <p class="text-xs sm:text-sm font-bold text-slate-800">${q.q}</p>
+          <div class="text-xs space-y-1 pt-1 border-t border-slate-200/70">
+            <div class="text-emerald-700 font-bold">正解：${correctStr}</div>
+            ${!res.isCorrect ? `<div class="text-rose-600">あなたの回答：${userStr}</div>` : ''}
+            <p class="text-slate-600 leading-relaxed pt-1">${q.explanation}</p>
+          </div>
+        `;
+        reviewList.appendChild(card);
+      });
+
+      switchScreen('resultScreen');
+    }
+
+    // 間違えた問題だけ再挑戦
+    function retryWrongQuestions() {
+      const wrongQs = sessionResults.filter(r => !r.isCorrect).map(r => r.qObj);
+      if (wrongQs.length > 0) {
+        startQuiz(wrongQs);
+      }
+    }
+
+    // トップへ戻る
+    function goHome() {
+      switchScreen('homeScreen');
+    }
+
+    // クイズ中の離脱確認モーダル
+    function confirmGoHome() {
+      if (!document.getElementById('quizScreen').classList.contains('hidden')) {
+        openModal(
+          'テストを中断しますか？',
+          '現在の進捗は破棄され、トップ画面に戻ります。',
+          () => {
+            closeModal();
+            goHome();
+          }
+        );
+      } else {
+        goHome();
+      }
+    }
+
+    // 履歴リセットモーダル
+    function openResetModal() {
+      openModal(
+        '学習履歴をリセットしますか？',
+        '最高正答率と「間違えた問題」の記録がすべて初期化されます。',
+        () => {
+          try {
+            localStorage.removeItem(STORAGE_KEY_WRONG);
+            localStorage.removeItem(STORAGE_KEY_BEST);
+          } catch (e) {}
+          updateHomeStats();
+          closeModal();
+        }
+      );
+    }
+
+    function openModal(title, message, onConfirm) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalMessage').textContent = message;
+      const btn = document.getElementById('modalConfirmBtn');
+      btn.onclick = onConfirm;
+      document.getElementById('customModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('customModal').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>

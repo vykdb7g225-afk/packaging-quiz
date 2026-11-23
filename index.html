@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>包装技術 確認テスト対策クイズ</title>
+  <title>包装技術 確認テスト対策クイズ＆単語帳</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Inter & Noto Sans JP -->
@@ -34,19 +34,31 @@
 
   <!-- ヘッダー -->
   <header class="bg-slate-900 text-white shadow-md sticky top-0 z-20">
-    <div class="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center space-x-2.5">
-        <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-black text-white text-sm tracking-tighter shadow-inner">
-          PKG
+    <div class="max-w-2xl mx-auto px-4 pt-3 pb-2.5 space-y-2.5">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-black text-white text-sm tracking-tighter shadow-inner">
+            PKG
+          </div>
+          <div>
+            <h1 class="text-sm sm:text-base font-bold leading-tight">包装技術 確認テスト対策</h1>
+            <p class="text-[11px] text-slate-400">配布テキスト準拠・演習＆用語単語帳</p>
+          </div>
         </div>
-        <div>
-          <h1 class="text-sm sm:text-base font-bold leading-tight">包装技術 確認テスト対策</h1>
-          <p class="text-[11px] text-slate-400">配布テキスト準拠・○×＆4択演習（全48問）</p>
-        </div>
+        <button id="homeBtn" onclick="confirmGoHome()" class="hidden text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 btn-tap">
+          トップへ
+        </button>
       </div>
-      <button id="homeBtn" onclick="confirmGoHome()" class="hidden text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 btn-tap">
-        トップへ
-      </button>
+
+      <!-- モード切替タブ（クイズ / 単語帳） -->
+      <div class="grid grid-cols-2 gap-1.5 bg-slate-800 p-1 rounded-xl">
+        <button id="tabQuizBtn" onclick="switchMainMode('quiz')" class="py-2 rounded-lg text-xs sm:text-sm font-extrabold bg-blue-600 text-white shadow-sm transition btn-tap">
+          クイズ演習（48問）
+        </button>
+        <button id="tabVocabBtn" onclick="switchMainMode('vocab')" class="py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-300 hover:text-white transition btn-tap">
+          用語集・単語帳（<span id="vocabTabCount">40</span>語）
+        </button>
+      </div>
     </div>
   </header>
 
@@ -257,6 +269,61 @@
 
     </section>
 
+    <!-- ==================== 4. 用語集・単語帳画面 ==================== -->
+    <section id="vocabScreen" class="hidden space-y-4 animate-fade-in">
+      
+      <!-- 検索＆コントロールカード -->
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-extrabold text-slate-800">重要用語・単語帳</h2>
+          <span id="vocabHitCount" class="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full">全40語</span>
+        </div>
+
+        <!-- 検索ボックス -->
+        <div class="relative">
+          <input
+            type="text"
+            id="vocabSearchInput"
+            oninput="renderVocabList()"
+            placeholder="用語・キーワードで検索（例：ピロー、FFS、PTP…）"
+            class="w-full pl-9 pr-9 py-2.5 rounded-xl border border-slate-300 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z"></path>
+          </svg>
+          <button onclick="clearVocabSearch()" id="clearSearchBtn" class="hidden absolute right-2.5 top-2 text-xs text-slate-400 hover:text-slate-700 px-1.5 py-0.5">
+            ✕
+          </button>
+        </div>
+
+        <!-- 単元フィルタ＆暗記モード切替 -->
+        <div class="flex flex-col sm:flex-row gap-2">
+          <select id="vocabChapterSelect" onchange="renderVocabList()" class="flex-1 p-2.5 rounded-xl border border-slate-300 bg-slate-50 text-xs sm:text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="all">すべての単元（全40語）</option>
+            <option value="ch2">第2章：品質保護・変質・簡便性</option>
+            <option value="ch3">第3章：包装材料・複合フィルム</option>
+            <option value="ch4">第4章：酸化防止・医薬品・日用品</option>
+            <option value="ch56">第5・6章：充填・包装機・ガス置換・悪戯防止</option>
+          </select>
+
+          <button type="button" id="hideMeaningToggle" onclick="toggleHideMeaning()" class="py-2.5 px-3.5 rounded-xl border border-slate-300 bg-white text-slate-700 font-bold text-xs flex items-center justify-center space-x-1.5 btn-tap">
+            <span id="hideMeaningIcon">👁️</span>
+            <span id="hideMeaningLabel">暗記モード：OFF</span>
+          </button>
+        </div>
+
+        <p id="flashcardHint" class="hidden text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5">
+          暗記モードON中：各カードをタップすると意味が表示されます。
+        </p>
+      </div>
+
+      <!-- 単語カード一覧 -->
+      <div id="vocabListContainer" class="space-y-2.5">
+        <!-- JSで生成 -->
+      </div>
+
+    </section>
+
   </main>
 
   <!-- 確認モーダル（alert/confirm代替） -->
@@ -283,7 +350,6 @@
   <script>
     /**
      * 問題データベース（全48問：○×問題 24問 ＋ 4択問題 24問）
-     * 配布本のすべてのアップロード画像（P.26〜135）から厳選作成
      */
     const QUESTIONS = [
       // ================= 第2章：品質保護・化学的変質・保存法・簡便性 =================
@@ -943,10 +1009,384 @@
       }
     ];
 
+    /**
+     * 重要用語・単語帳データベース（全40語）
+     */
+    const VOCABULARY = [
+      // 第2章
+      {
+        id: 1,
+        chapter: 'ch2',
+        chapterName: '第2章',
+        page: 'P.26-27',
+        term: '包装資材の3大保護機能',
+        reading: 'ほうそうしざいのさんだいほごきのう',
+        meaning: '①化学的・物理的な安定性、②物理的に充分な強度、③酸素・水分・水蒸気などに対する遮断性の3つ。'
+      },
+      {
+        id: 2,
+        chapter: 'ch2',
+        chapterName: '第2章',
+        page: 'P.26-27',
+        term: '青果物の呼吸包装',
+        reading: 'せいかぶつのこきゅうほうそう',
+        meaning: '青果物は鮮度保持のために適度な呼吸が必要であり、酸素透過性と二酸化炭素透過性のバランスをとった包装を行うこと。'
+      },
+      {
+        id: 3,
+        chapter: 'ch2',
+        chapterName: '第2章',
+        page: 'P.28-29',
+        term: '防湿包装',
+        reading: 'ぼうしつほうそう',
+        meaning: '海苔などの乾燥食品が吸湿して品質や食感が劣化するのを防ぐため、水蒸気遮断性に優れた包材で行う包装。'
+      },
+      {
+        id: 4,
+        chapter: 'ch2',
+        chapterName: '第2章',
+        page: 'P.32-33',
+        term: 'メイラード反応',
+        reading: 'めいらーどはんのう',
+        meaning: '還元糖とアミノ酸・ペプチドが反応して褐変物質（メラノイジン）を作る非酵素的褐変。加熱褐変（香り）と酸化褐変（変質）がある。'
+      },
+      {
+        id: 5,
+        chapter: 'ch2',
+        chapterName: '第2章',
+        page: 'P.32-33',
+        term: '保香性（香気遮断性）',
+        reading: 'ほこうせい・こうきしゃだんせい',
+        meaning: '味噌やコーヒーなどの香り成分が外部へ逃げたり、外部の臭いが移ったりするのを遮断する機能。'
+      },
+      {
+        id: 6,
+        chapter: 'ch2',
+        chapterName: '第2章',
+        page: 'P.38-39',
+        term: '可溶性包材',
+        reading: 'かようせいほうざい',
+        meaning: '水などに溶ける包材。洗濯物を包んだまま洗濯機に入れられる包装など、「簡便性」を高める機能として使われる。'
+      },
+      {
+        id: 7,
+        chapter: 'ch2',
+        chapterName: '第2章',
+        page: 'P.39',
+        term: 'ブリスターパック',
+        reading: 'ぶりすたーぱっく',
+        meaning: '透明プラスチックを成形したドーム状のカバーで、バラバラな商品や小物・文具などを台紙に集約して固定する包装。'
+      },
+      {
+        id: 8,
+        chapter: 'ch2',
+        chapterName: '第2章',
+        page: 'P.39, 88',
+        term: 'PTP包装（Press Through Pack）',
+        reading: 'ぴーてぃーぴーほうそう',
+        meaning: 'プラスチックのポケットに錠剤を入れアルミ箔で密封する包装。1回分ずつ押し出して取り出せ、防湿性と未使用性判別に優れる。'
+      },
+
+      // 第3章
+      {
+        id: 9,
+        chapter: 'ch3',
+        chapterName: '第3章',
+        page: 'P.46',
+        term: 'コンバーター（包装加工企業）',
+        reading: 'こんばーたー',
+        meaning: '包装資材に印刷や貼合せ（ラミネート）を施し、内容品のニーズに合わせて様々な材料を組み合わせ包装容器に仕上げる企業。'
+      },
+      {
+        id: 10,
+        chapter: 'ch3',
+        chapterName: '第3章',
+        page: 'P.46-47',
+        term: 'カレット',
+        reading: 'かれっと',
+        meaning: 'ガラス瓶製造のリサイクル原料として再利用される回収ガラスくず。珪砂・ソーダ灰・炭酸カルシウム（バッチ）に加えて溶融する。'
+      },
+      {
+        id: 11,
+        chapter: 'ch3',
+        chapterName: '第3章',
+        page: 'P.66',
+        term: '積層フィルムの基本3層構成',
+        reading: 'せきそうふぃるむのきほんさんそうこうせい',
+        meaning: '外側から「表面基材（強度・印刷適性）／ バリア層（ガス・水蒸気遮断）／ シーラント（ヒートシール適性）」の3層構成。'
+      },
+      {
+        id: 12,
+        chapter: 'ch3',
+        chapterName: '第3章',
+        page: 'P.66',
+        term: 'シーラント',
+        reading: 'しーらんと',
+        meaning: '複合フィルムの最内層に使われ、熱と圧力によって溶けて袋同士を密封（ヒートシール）する役割を持つ樹脂層。'
+      },
+      {
+        id: 13,
+        chapter: 'ch3',
+        chapterName: '第3章',
+        page: 'P.66-67',
+        term: 'ドライラミネート方式',
+        reading: 'どらいらみねーとほうしき',
+        meaning: '接着剤を使ってフィルム同士を貼合わせる積層方式。小ロット生産が可能で、レトルト食品袋などの高機能袋に用いられる。'
+      },
+      {
+        id: 14,
+        chapter: 'ch3',
+        chapterName: '第3章',
+        page: 'P.66-67',
+        term: 'エキストルーダー方式',
+        reading: 'えきすとるーだーほうしき',
+        meaning: '押出機とTダイで溶融した樹脂そのものを接着剤としてフィルムを貼合わせる方式。スナック袋や即席麺など大ロット品に向く。'
+      },
+
+      // 第4章
+      {
+        id: 15,
+        chapter: 'ch4',
+        chapterName: '第4章',
+        page: 'P.80-81',
+        term: '過酸化物価（POV）',
+        reading: 'かさんかぶつか・ぴーおーぶい',
+        meaning: '油脂の酸化初期に生成されるハイドロパーオキサイドの量を測定する指標。カルボニル価、酸価、TBA値とともに酸化度評価に用いる。'
+      },
+      {
+        id: 16,
+        chapter: 'ch4',
+        chapterName: '第4章',
+        page: 'P.80',
+        term: '物理的酸化防止法',
+        reading: 'ぶつりてきさんかぼうしほう',
+        meaning: '袋内の酸素を減らして酸化を防ぐ方法。真空包装、窒素置換包装、脱酸素剤封入包装が該当（酸化防止剤添加は化学的手法）。'
+      },
+      {
+        id: 17,
+        chapter: 'ch4',
+        chapterName: '第4章',
+        page: 'P.88',
+        term: '加速試験（医薬品安定性試験）',
+        reading: 'かそくしけん',
+        meaning: '厚労省ガイドラインに基づき、40℃・6ヶ月間などの過酷条件下でも医薬品の品質・効果が落ちないか確認する試験（長期保存試験は1年間）。'
+      },
+      {
+        id: 18,
+        chapter: 'ch4',
+        chapterName: '第4章',
+        page: 'P.88-89',
+        term: 'ディスポーザブル医療器具',
+        reading: 'でぃすぽーざぶるいりょうきぐ',
+        meaning: '使い回しによる感染防止のためプラスチックで作られた使い捨ての注射針・カテーテル等。密閉包装後にγ線や有害ガスで滅菌される。'
+      },
+      {
+        id: 19,
+        chapter: 'ch4',
+        chapterName: '第4章',
+        page: 'P.90',
+        term: '「品検済」「衛検済」マーク',
+        reading: 'ひんけんずみ・えいけんずみまーく',
+        meaning: '日本プラスチック日用品工業組合が自主規格適合品に与えるマーク。品質・性能には「品検済」、衛生には「衛検済」が与えられる。'
+      },
+
+      // 第5・6章
+      {
+        id: 20,
+        chapter: 'ch56',
+        chapterName: '第5章',
+        page: 'P.108-109',
+        term: '容量計量方式 ／ 質量計量方式',
+        reading: 'ようりょうけいりょう／しつりょうけいりょう',
+        meaning: '粉粒体・液体・粘体は体積で計る「容量計量方式」、固体バラ物は重さで計る「質量計量方式」を用いるのが一般的。'
+      },
+      {
+        id: 21,
+        chapter: 'ch56',
+        chapterName: '第5章',
+        page: 'P.108-109',
+        term: 'ホットパック（熱充填）',
+        reading: 'ほっとぱっく・ねつじゅうてん',
+        meaning: '飲料を約93℃まで昇温殺菌してから容器に充填する前殺菌方式。冷却時の減圧変形を防ぐため、耐熱・肉厚の剛性容器が必要。'
+      },
+      {
+        id: 22,
+        chapter: 'ch56',
+        chapterName: '第5章',
+        page: 'P.108',
+        term: '無菌充填（アセプティック充填）',
+        reading: 'むきんじゅうてん',
+        meaning: '内容物と容器を別々に殺菌し、無菌環境下で低温充填する方式。熱ダメージが少なく、薄肉で安価な容器が使える。'
+      },
+      {
+        id: 23,
+        chapter: 'ch56',
+        chapterName: '第5章',
+        page: 'P.109',
+        term: 'オーガー（スクリュー）計量充填機',
+        reading: 'おーがーけいりょうじゅうてんき',
+        meaning: 'スクリュー（螺旋羽根）の回転数によって小麦粉などの粉体を一定量切り出して充填する機械。'
+      },
+      {
+        id: 24,
+        chapter: 'ch56',
+        chapterName: '第5章',
+        page: 'P.109',
+        term: 'コンピュータスケール（組合せ計量機）',
+        reading: 'こんぴゅーたすけーる',
+        meaning: '複数の計量ホッパーに入ったピーマンや菓子などの重さを瞬時に組み合わせ、目標質量に最も近い組合せを選んで排出・充填する装置。'
+      },
+      {
+        id: 25,
+        chapter: 'ch56',
+        chapterName: '第5章',
+        page: 'P.110-111',
+        term: '縦形ピロー包装機',
+        reading: 'たてがたぴろーほうそうき',
+        meaning: 'フィルムを上部で円筒状にして胴部を縦シールし、上から内容物を落下させて横シール・切断する機械。液体・粉体・バラ菓子向き。'
+      },
+      {
+        id: 26,
+        chapter: 'ch56',
+        chapterName: '第5章',
+        page: 'P.110-111',
+        term: '給袋充填包装機',
+        reading: 'きゅうたいじゅうてんほうそうき',
+        meaning: 'あらかじめ製袋された袋を供給して開口・充填・熱シールする機械。多様な袋形状に対応し、真空装置を付けてレトルト食品にも適する。'
+      },
+      {
+        id: 27,
+        chapter: 'ch56',
+        chapterName: '第5章',
+        page: 'P.112-113',
+        term: '横形ピロー包装機',
+        reading: 'よこがたぴろーほうそうき',
+        meaning: '製品を水平方向に搬送しながらフィルムで筒状に包みシールする包装機。即席麺や細長い菓子など折れやすい製品をガードしながら包装できる。'
+      },
+      {
+        id: 28,
+        chapter: 'ch56',
+        chapterName: '第5章',
+        page: 'P.112-113',
+        term: '逆横形ピロー方式',
+        reading: 'ぎゃくよこがたぴろーほうしき',
+        meaning: 'フィルムを上から被せるのではなく、フィルムの上に製品を乗せて包み込む方式。柔らかく崩れやすい商品に最適。'
+      },
+      {
+        id: 29,
+        chapter: 'ch56',
+        chapterName: '第5章',
+        page: 'P.112',
+        term: 'サーボモーター＆学習形コンピュータ',
+        reading: 'さーぼもーたー・がくしゅうがたこんぴゅーた',
+        meaning: '近年の横形ピロー包装機に搭載され、小型サーボモーターでフィルム張力を微調整し、学習形コンピュータで品種切替の初期設定を容易にする。'
+      },
+      {
+        id: 30,
+        chapter: 'ch56',
+        chapterName: '第5章',
+        page: 'P.112-113',
+        term: '上包み包装機（オーバーラップ機）',
+        reading: 'うわづつみほうそうき',
+        meaning: '箱や製品をフィルムや紙でキャラメル包みのように折り畳んで包む機械。重い事務用紙は直線低速、軽いたばこは回転高速で包装する。'
+      },
+      {
+        id: 31,
+        chapter: 'ch56',
+        chapterName: '第5章',
+        page: 'P.114',
+        term: 'ビタミンC系鮮度保持剤',
+        reading: 'びたみんしーけいせんどほじざい',
+        meaning: '有機系のビタミンCなどを用いた鮮度保持剤。酸素を吸収した後に二酸化炭素（CO2）を発生させ、酸化防止と同時に微生物繁殖も抑える。'
+      },
+      {
+        id: 32,
+        chapter: 'ch56',
+        chapterName: '第5章',
+        page: 'P.114-115',
+        term: 'ガスフラッシュ方式',
+        reading: 'がすふらっしゅほうしき',
+        meaning: '包装機上で不活性ガス（窒素・CO2）を吹き込み空気と入れ替える方式。残留酸素濃度は0.2〜5%で、削り節袋やココア袋などに使われる。'
+      },
+      {
+        id: 33,
+        chapter: 'ch56',
+        chapterName: '第5章',
+        page: 'P.115',
+        term: '残留酸素濃度の比較',
+        reading: 'ざんりゅうさんそのうどのひかく',
+        meaning: '真空包装・脱酸素剤封入は「0.1%以下」、チャンバー式ガス置換は「0.1%」、ガスフラッシュ方式は「0.2〜5%」。'
+      },
+      {
+        id: 34,
+        chapter: 'ch56',
+        chapterName: '第5章',
+        page: 'P.115-116',
+        term: '深絞り包装機',
+        reading: 'ふかしぼりほうそうき',
+        meaning: '下フィルムを加熱・成形してポケットを作り、内容物を充填後、上フィルムを被せて真空シール・カットする包装機。スライスハム等に活躍。'
+      },
+      {
+        id: 35,
+        chapter: 'ch56',
+        chapterName: '第5章',
+        page: 'P.116-117',
+        term: 'FFS機（Form Fill Seal機）',
+        reading: 'えふえふえすき',
+        meaning: 'シート繰り出し→成形→充填→熱封緘→切断まで全自動で行う一貫生産システム。中間製品が出ず無菌包装（コーヒークリーム等）や大ロット向き。'
+      },
+      {
+        id: 36,
+        chapter: 'ch56',
+        chapterName: '第6章',
+        page: 'P.134-135',
+        term: '未使用性（開封確認性／タンパーエビデント）',
+        reading: 'みしようせい・かいふうかくにんせい',
+        meaning: '悪戯を完全に防ぐことは不可能なため、一度開封されたら元に戻せず異常をすぐ判別できるようにする機能。'
+      },
+      {
+        id: 37,
+        chapter: 'ch56',
+        chapterName: '第6章',
+        page: 'P.135',
+        term: 'ピルファープルーフキャップ（PPキャップ）',
+        reading: 'ぴるふぁーぷるーふきゃっぷ',
+        meaning: 'アルミ製キャップの下部をびん口にタイトに固定し、開封時はミシン目から破断して開封証拠を残すキャップ。ウイスキー等に普及。'
+      },
+      {
+        id: 38,
+        chapter: 'ch56',
+        chapterName: '第6章',
+        page: 'P.135',
+        term: 'シュリンク包装・キャップシール',
+        reading: 'しゅりんくほうそう・きゃっぷしーる',
+        meaning: '熱収縮性フィルムを被せて加熱密着させる包装。一度破ると元へ復元できないため、未使用性の確認やびん栓の安全確保に有効。'
+      },
+      {
+        id: 39,
+        chapter: 'ch56',
+        chapterName: '第6章',
+        page: 'P.134-135',
+        term: 'チャイルド・レジスタント包装',
+        reading: 'ちゃいるどれじすたんとほうそう',
+        meaning: '乳幼児の誤飲を防ぐため、大人には開けられるが子供には開けにくい工夫をした包装。「押しながら回す」2動作構造や粘着フィルム貼合せなど。'
+      },
+      {
+        id: 40,
+        chapter: 'ch56',
+        chapterName: '第6章',
+        page: 'P.134-135',
+        term: 'ワリフ（誤食防止袋の中間層）',
+        reading: 'わりふ',
+        meaning: '縦横に延伸したポリオレフィン糸を直交積層した高強度不織布。脱酸素剤などの誤食防止袋の中間層に入れ、子供や高齢者が噛み切れないようにする。'
+      }
+    ];
+
     // ================= 状態管理 =================
     const STORAGE_KEY_WRONG = 'omori_pkg_quiz_wrong_ids_v1';
     const STORAGE_KEY_BEST = 'omori_pkg_quiz_best_score_v1';
 
+    let mainMode = 'quiz';      // 'quiz' | 'vocab'
     let selectedType = 'all';   // 'all' | 'tf' | 'mc' | 'wrong'
     let selectedLimit = 10;     // 10 | 20 | 999
     let quizQueue = [];
@@ -954,12 +1394,33 @@
     let score = 0;
     let sessionResults = [];    // { qObj, userAnswer, isCorrect }
     let answeredCurrent = false;
+    let hideMeaningMode = false;
 
     // 初期化
     window.onload = function () {
       updateHomeStats();
       setupSelectors();
+      document.getElementById('vocabTabCount').textContent = VOCABULARY.length;
+      renderVocabList();
     };
+
+    // メインモード切替（クイズ / 単語帳）
+    function switchMainMode(mode) {
+      mainMode = mode;
+      const tabQuiz = document.getElementById('tabQuizBtn');
+      const tabVocab = document.getElementById('tabVocabBtn');
+
+      if (mode === 'quiz') {
+        tabQuiz.className = 'py-2 rounded-lg text-xs sm:text-sm font-extrabold bg-blue-600 text-white shadow-sm transition btn-tap';
+        tabVocab.className = 'py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-300 hover:text-white transition btn-tap';
+        switchScreen('homeScreen');
+      } else {
+        tabVocab.className = 'py-2 rounded-lg text-xs sm:text-sm font-extrabold bg-blue-600 text-white shadow-sm transition btn-tap';
+        tabQuiz.className = 'py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-300 hover:text-white transition btn-tap';
+        switchScreen('vocabScreen');
+        renderVocabList();
+      }
+    }
 
     // ローカルストレージ操作
     function getWrongIds() {
@@ -1117,15 +1578,15 @@
 
     // 画面切り替え
     function switchScreen(screenId) {
-      ['homeScreen', 'quizScreen', 'resultScreen'].forEach(id => {
+      ['homeScreen', 'quizScreen', 'resultScreen', 'vocabScreen'].forEach(id => {
         document.getElementById(id).classList.add('hidden');
       });
       document.getElementById(screenId).classList.remove('hidden');
 
       const homeBtn = document.getElementById('homeBtn');
-      if (screenId === 'homeScreen') {
+      if (screenId === 'homeScreen' || screenId === 'vocabScreen') {
         homeBtn.classList.add('hidden');
-        updateHomeStats();
+        if (screenId === 'homeScreen') updateHomeStats();
       } else {
         homeBtn.classList.remove('hidden');
       }
@@ -1145,7 +1606,6 @@
       const pct = Math.round(((currentIndex) / total) * 100);
       document.getElementById('progressBar').style.width = `${Math.max(5, pct)}%`;
 
-      // バッジとタグ
       const typeBadge = document.getElementById('qTypeBadge');
       if (q.type === 'tf') {
         typeBadge.textContent = '○×問題';
@@ -1159,7 +1619,6 @@
       document.getElementById('qPageTag').textContent = 'テキスト ' + q.page;
       document.getElementById('questionText').textContent = q.q;
 
-      // 解説エリアを隠す
       document.getElementById('feedbackCard').classList.add('hidden');
 
       const tfArea = document.getElementById('tfOptionsArea');
@@ -1168,7 +1627,6 @@
       if (q.type === 'tf') {
         tfArea.classList.remove('hidden');
         mcArea.classList.add('hidden');
-        // ボタン状態リセット
         ['tfBtn0', 'tfBtn1'].forEach(id => {
           const btn = document.getElementById(id);
           btn.disabled = false;
@@ -1203,7 +1661,6 @@
       const q = quizQueue[currentIndex];
       const isCorrect = (chosenIdx === q.shuffledAnswer);
 
-      // 間違えた問題リストの更新
       let wrongIds = getWrongIds();
       if (isCorrect) {
         score++;
@@ -1222,7 +1679,6 @@
         isCorrect: isCorrect
       });
 
-      // ボタンの見た目変更
       if (q.type === 'tf') {
         ['tfBtn0', 'tfBtn1'].forEach((id, idx) => {
           const btn = document.getElementById(id);
@@ -1249,7 +1705,6 @@
         });
       }
 
-      // フィードバック表示
       const fbCard = document.getElementById('feedbackCard');
       const fbIcon = document.getElementById('feedbackIcon');
       const fbTitle = document.getElementById('feedbackTitle');
@@ -1289,7 +1744,6 @@
         nextBtn.textContent = '次の問題へ →';
       }
 
-      // スムーズに解説へスクロール
       setTimeout(() => {
         fbCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }, 60);
@@ -1333,7 +1787,6 @@
       document.getElementById('resultRank').textContent = rank;
       document.getElementById('resultComment').textContent = comment;
 
-      // 間違えた問題再挑戦ボタン制御
       const wrongItems = sessionResults.filter(r => !r.isCorrect);
       const retryBtn = document.getElementById('retryWrongBtn');
       if (wrongItems.length > 0) {
@@ -1343,7 +1796,6 @@
         retryBtn.classList.add('hidden');
       }
 
-      // 振り返りリスト描画
       const reviewList = document.getElementById('reviewList');
       reviewList.innerHTML = '';
 
@@ -1386,7 +1838,7 @@
 
     // トップへ戻る
     function goHome() {
-      switchScreen('homeScreen');
+      switchMainMode('quiz');
     }
 
     // クイズ中の離脱確認モーダル
@@ -1403,6 +1855,110 @@
       } else {
         goHome();
       }
+    }
+
+    // ================= 単語帳機能 =================
+    function clearVocabSearch() {
+      document.getElementById('vocabSearchInput').value = '';
+      renderVocabList();
+    }
+
+    function toggleHideMeaning() {
+      hideMeaningMode = !hideMeaningMode;
+      const btn = document.getElementById('hideMeaningToggle');
+      const label = document.getElementById('hideMeaningLabel');
+      const icon = document.getElementById('hideMeaningIcon');
+      const hint = document.getElementById('flashcardHint');
+
+      if (hideMeaningMode) {
+        btn.className = 'py-2.5 px-3.5 rounded-xl border-2 border-amber-500 bg-amber-50 text-amber-900 font-extrabold text-xs flex items-center justify-center space-x-1.5 btn-tap';
+        icon.textContent = '🙈';
+        label.textContent = '暗記モード：ON';
+        hint.classList.remove('hidden');
+      } else {
+        btn.className = 'py-2.5 px-3.5 rounded-xl border border-slate-300 bg-white text-slate-700 font-bold text-xs flex items-center justify-center space-x-1.5 btn-tap';
+        icon.textContent = '👁️';
+        label.textContent = '暗記モード：OFF';
+        hint.classList.add('hidden');
+      }
+      renderVocabList();
+    }
+
+    function renderVocabList() {
+      const keyword = document.getElementById('vocabSearchInput').value.trim().toLowerCase();
+      const chapter = document.getElementById('vocabChapterSelect').value;
+      const clearBtn = document.getElementById('clearSearchBtn');
+
+      if (keyword.length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+
+      const filtered = VOCABULARY.filter(v => {
+        const matchChapter = (chapter === 'all') || (v.chapter === chapter);
+        if (!matchChapter) return false;
+        if (!keyword) return true;
+        return (
+          v.term.toLowerCase().includes(keyword) ||
+          v.reading.toLowerCase().includes(keyword) ||
+          v.meaning.toLowerCase().includes(keyword) ||
+          v.page.toLowerCase().includes(keyword)
+        );
+      });
+
+      document.getElementById('vocabHitCount').textContent = `${filtered.length}語`;
+
+      const container = document.getElementById('vocabListContainer');
+      container.innerHTML = '';
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white rounded-2xl p-6 text-center border border-slate-200 text-sm text-slate-500">
+            該当する用語が見つかりませんでした。別のキーワードで検索してみてください。
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-2 transition btn-tap ' + (hideMeaningMode ? 'cursor-pointer hover:border-blue-400' : '');
+
+        const meaningHtml = hideMeaningMode
+          ? `<div class="vocab-meaning hidden text-sm text-slate-700 leading-relaxed pt-2 border-t border-slate-100">${item.meaning}</div>
+             <div class="vocab-mask text-xs font-bold text-blue-600 bg-blue-50/80 rounded-lg py-2 px-3 text-center">タップして意味を表示</div>`
+          : `<div class="text-sm text-slate-700 leading-relaxed pt-2 border-t border-slate-100">${item.meaning}</div>`;
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-100 text-slate-600">${item.chapterName}</span>
+            <span class="text-[11px] text-slate-400">テキスト ${item.page}</span>
+          </div>
+          <div>
+            <div class="text-base font-extrabold text-slate-900">${item.term}</div>
+            <div class="text-[11px] text-slate-400">${item.reading}</div>
+          </div>
+          ${meaningHtml}
+        `;
+
+        if (hideMeaningMode) {
+          card.onclick = () => {
+            const mEl = card.querySelector('.vocab-meaning');
+            const maskEl = card.querySelector('.vocab-mask');
+            const isHidden = mEl.classList.contains('hidden');
+            if (isHidden) {
+              mEl.classList.remove('hidden');
+              maskEl.classList.add('hidden');
+            } else {
+              mEl.classList.add('hidden');
+              maskEl.classList.remove('hidden');
+            }
+          };
+        }
+
+        container.appendChild(card);
+      });
     }
 
     // 履歴リセットモーダル
